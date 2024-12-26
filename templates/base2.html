@@ -1,0 +1,44 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        {% include 'head.html' %}
+    </head>
+    <body>
+        <div class="wrapper">
+            {% include 'sidebar.html' %}
+            <div class="main">
+                {% include 'navbar.html' %}
+                {% block content %}
+                {% endblock %}
+                {% include 'footer.html' %}
+            </div>
+        </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script>
+        toastr.options = {
+            closeButton: true,
+            debug: false,
+            newestOnTop: true,
+            progressBar: true,
+            positionClass: 'toast-top-right',
+            preventDuplicates: false,
+            onclick: null,
+            showDuration: '300',
+            hideDuration: '1000',
+            timeOut: '5000',
+            extendedTimeOut: '1000',
+            showEasing: 'swing',
+            hideEasing: 'linear',
+            showMethod: 'fadeIn',
+            hideMethod: 'fadeOut'
+        };
+    </script>
+    <script src="{% static 'js/app.js' %}"></script>
+    {% block scripts %}
+    {% endblock %}
+    
+    </body>
+</html>

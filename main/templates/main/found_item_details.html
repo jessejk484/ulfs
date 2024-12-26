@@ -1,0 +1,145 @@
+{% extends "base2.html" %}
+{% load custom_filters %}
+{% load static %}
+{% block content %}
+<main class="content">
+    <div class="container-fluid p-0">
+        <div class="mb-3">
+            <h1 class="h3 d-inline align-middle">Item Number: {{ item.id }}</h1>
+        </div>
+
+        {% if not item.admin_received and user.is_superuser %}
+        <div class="mb-3">
+            <a href="{% url 'receive_item' item_id=item.id %}" class="btn btn-info">Item Collected From Founder</a>
+        </div>
+        {% endif %}
+
+        {% if not item.owner_collected and not user.is_superuser %}
+        <div class="mb-3">
+            <a href="{% url 'claim_item' item_id=item.id %}" class="btn btn-success">Claim</a>
+        </div>
+        {% endif %}
+
+        <div class="row">
+            <div class="col-md-5">
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Item Details</h5>
+                    </div>
+                    <div class="card-body text-center">
+                        <img src="https://ulfs202312.blob.core.windows.net/static/eastus2/{{ item.image }}" class="img-fluid mb-2" />
+                        <h5 class="card-title mb-0">{{ item.item_name }}</h5>
+                    </div>
+                    <hr class="my-0" />
+                    <div class="card-body">
+                        <h5 class="h6 card-title">Description</h5>
+                        <p>{{ item.description }}</p>
+                    </div>
+                    <hr class="my-0" />
+                    <div class="card-body">
+                        <h5 class="h6 card-title">Date Found</h5>
+                        <p>{{ item.date_found }}</p>
+                    </div>
+                    <hr class="my-0" />
+                    <div class="card-body">
+                        <h5 class="h6 card-title">Location</h5>
+                        <p>{{ item.location_found }}</p>
+                    </div>
+                    <hr class="my-0" />
+                    <div class="card-body">
+                        <h5 class="h6 card-title">Contact Info</h5>
+                        <p>{{ item.contact_info }}</p>
+                    </div>
+                    <hr class="my-0" />
+                    <div class="card-body">
+                        <h5 class="h6 card-title">Date Reported</h5>
+                        <p>{{ item.date_reported }}</p>
+                    </div>
+                    <hr class="my-0" />
+                </div>
+            </div>
+            <div class="col-md-7">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Timeline</h5>
+                    </div>
+                    <div class="card-body h-100">
+                        {% for timeline in timelines %}
+                        {% if timeline.activity_type == "reported" %}
+                        <div class="d-flex align-items-start">
+                            <img src="https://ulfs202312.blob.core.windows.net/static/eastus2/static/user.png" width="36" height="36" class="rounded-circle me-2" alt="Vanessa Tucker">
+                            <div class="flex-grow-1">
+                                <small class="float-end text-navy">{{ timeline.timestamp|timesince }} ago</small>
+                                <strong>{{ timeline.user }}</strong> {{ timeline.activity_type }} the item as <strong>found</strong><br />
+                                <small class="text-muted">{{ timeline.timestamp|custom_timestamp_format }}</small><br />
+
+                            </div>
+                        </div>
+                        {% elif timeline.activity_type == 'claimed' and user.is_superuser and item.admin_received and not item.owner_collected and timeline.show_buttons %}
+                        <div class="d-flex align-items-start">
+                            <img src="https://ulfs202312.blob.core.windows.net/static/eastus2/static/user.png" width="36" height="36" class="rounded-circle me-2" alt="Vanessa Tucker">
+                            <div class="flex-grow-1">
+                                <small class="float-end text-navy">{{ timeline.timestamp|timesince }} ago</small>
+                                <strong>{{ timeline.user }}</strong> {{ timeline.activity_type }} the item<br />
+                                <small class="text-muted">{{ timeline.timestamp|custom_timestamp_format }}</small><br />
+                                <a href="{% url 'claim_approve' id=timeline.id %}" class="btn btn-success">Approve</a>
+                                <a href="{% url 'claim_deny' id=timeline.id %}" class="btn btn-danger">Deny</a>
+                            </div>
+                        </div>
+                        {% elif timeline.activity_type == 'collected' %}
+                        <div class="d-flex align-items-start">
+                            <img src="https://ulfs202312.blob.core.windows.net/static/eastus2/static/user.png" width="36" height="36" class="rounded-circle me-2" alt="Vanessa Tucker">
+                            <div class="flex-grow-1">
+                                <small class="float-end text-navy">{{ timeline.timestamp|timesince }} ago</small>
+                                <strong>{{ timeline.user }}</strong> {{ timeline.activity_type }} the item from <strong>founder</strong><br />
+                                <small class="text-muted">{{ timeline.timestamp|custom_timestamp_format }}</small><br />
+
+                            </div>
+                        </div>
+                        {% elif timeline.activity_type == 'denied' %}
+                        <div class="d-flex align-items-start">
+                            <img src="https://ulfs202312.blob.core.windows.net/static/eastus2/static/user.png" width="36" height="36" class="rounded-circle me-2" alt="Vanessa Tucker">
+                            <div class="flex-grow-1">
+                                <small class="float-end text-navy">{{ timeline.timestamp|timesince }} ago</small>
+                                <strong>admin</strong> {{ timeline.activity_type }} the claim by <strong>{{ timeline.user }}</strong><br />
+                                <small class="text-muted">{{ timeline.timestamp|custom_timestamp_format }}</small><br />
+
+                            </div>
+                        </div>
+                        {% elif timeline.activity_type == 'verified' %}
+                        <div class="d-flex align-items-start">
+                            <img src="https://ulfs202312.blob.core.windows.net/static/eastus2/static/user.png" width="36" height="36" class="rounded-circle me-2" alt="Vanessa Tucker">
+                            <div class="flex-grow-1">
+                                <small class="float-end text-navy">{{ timeline.timestamp|timesince }} ago</small>
+                                <strong>{{ timeline.user }}</strong> collected the item from <strong>admin </strong> after verification.<br />
+                                <small class="text-muted">{{ timeline.timestamp|custom_timestamp_format }}</small><br />
+
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="d-flex align-items-start">
+                            <img src="https://ulfs202312.blob.core.windows.net/static/eastus2/static/user.png" width="36" height="36" class="rounded-circle me-2" alt="Vanessa Tucker">
+                            <div class="flex-grow-1">
+                                <small class="float-end text-navy">{{ timeline.timestamp|timesince }} ago</small>
+                                <strong>{{ timeline.user }}</strong> {{ timeline.activity_type }} the item <br />
+                                <small class="text-muted">{{ timeline.timestamp|custom_timestamp_format }}</small><br />
+
+                            </div>
+                        </div>
+                        {% endif %}
+                        <hr />
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}
+{% block scripts %}
+{% for message in messages %}
+    <script>
+        toastr["{{ message.tags }}"]("{{ message }}");
+    </script>
+{% endfor %}
+{% endblock %}

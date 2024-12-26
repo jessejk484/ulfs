@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<main class="d-flex w-100">
+    <div class="container d-flex flex-column">
+        <div class="row vh-100">
+            <div class="col-sm-10 col-md-8 col-lg-6 col-xl-5 mx-auto d-table h-100">
+                <div class="d-table-cell align-middle">
+
+                    <div class="text-center mt-4">
+                        <h1 class="h2">Create account with <span style="font-weight: bold; color: green;">ULFS</span></h1>
+                        <p class="lead">
+                            Please enter your UNT Email to register!
+                        </p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="m-sm-3">
+                                <form method="post">
+                                    {% csrf_token %}
+                                    <div class="mb-3">
+                                        <label class="form-label">First name</label>
+                                        <input class="form-control form-control-lg" type="text" name="first_name" placeholder="Enter your First Name" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Last name</label>
+                                        <input class="form-control form-control-lg" type="text" name="last_name" placeholder="Enter your Last Name" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">User name</label>
+                                        <input class="form-control form-control-lg" type="text" name="username" placeholder="Enter your username" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Email</label>
+                                        <input class="form-control form-control-lg" type="email" name="email" placeholder="Enter your email" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Password</label>
+                                        <input class="form-control form-control-lg" type="password" name="password1" placeholder="Enter password" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Confirm Password</label>
+                                        <input class="form-control form-control-lg" type="password" name="password2" placeholder="Confirm password" />
+                                    </div>
+                                    <div class="d-grid gap-2 mt-3">
+                                        <button class="btn btn-lg btn-success">Sign up</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center mb-3">
+                        Already have account? <a href="{% url 'login' %}">Log In</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}
+{% block scripts %}
+<script src="{% static 'js/app.js' %}"></script>
+{% for message in messages %}
+    <script>
+        toastr["{{ message.tags }}"]("{{ message }}");
+    </script>
+{% endfor %}
+{% endblock %}

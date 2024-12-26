@@ -1,0 +1,41 @@
+{% extends "base2.html" %}
+{% load static %}
+{% block content %}
+<main class="content">
+    <div class="container-fluid p-0">
+        <h1 class="h3 mb-3">Recent Claims</h1>
+        {% for claim in claims%}
+        <div class="card">
+            <div class="card-body">
+                <strong>{{ claim.user }}</strong> claimed the item <a href="{% url 'found_items_details' item_id=claim.found_item_id %}"> {{ claim.found_item_id }}</a>
+            </div>
+        </div>
+        {% endfor %}
+
+        <div style="float: right;" class="pagination">
+            <span class="step-links">
+                {% if found_items.has_previous %}
+                    <a href="?page=1">&laquo; first</a>
+                    <a href="?page={{ claims.previous_page_number }}">previous</a>
+                {% endif %}
+    
+                <span class="current-page">
+                    Page {{ claims.number }} of {{ claims.paginator.num_pages }}.
+                </span>
+    
+                {% if claims.has_next %}
+                    <a href="?page={{ claims.next_page_number }}">next</a>
+                    <a href="?page={{ claims.paginator.num_pages }}">last &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+    </div>
+</main>
+{% endblock %}
+{% block scripts %}
+{% for message in messages %}
+    <script>
+        toastr["{{ message.tags }}"]("{{ message }}");
+    </script>
+{% endfor %}
+{% endblock %}

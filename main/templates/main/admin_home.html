@@ -1,0 +1,82 @@
+{% extends "base2.html" %}
+{% load static %}
+{% block content %}
+<main class="content">
+    <div class="container-fluid p-0">
+        <h1 class="h3 mb-3"><strong>Admin</strong> Dashboard</h1>
+
+        <div class="row">
+            <div class="w-100">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col mt-0">
+                                        <h5 class="card-title">Items Count</h5>
+                                    </div>
+                                </div>
+                                <h1 class="mt-1 mb-3">{{ total_items_count }}</h1>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col mt-0">
+                                        <h5 class="card-title">Total Claims</h5>
+                                    </div>
+                                </div>
+                                <h1 class="mt-1 mb-3">{{ claims_count }}</h1>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col mt-0">
+                                        <h5 class="card-title">Items Inbound</h5>
+                                    </div>
+                                </div>
+                                <h1 class="mt-1 mb-3">{{ items_inbound_count }}</h1>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col mt-0">
+                                        <h5 class="card-title">Items Collected</h5>
+                                    </div>
+                                </div>
+                                <h1 class="mt-1 mb-3">{{ total_claims_count }}</h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <h1 class="h3 mb-3">Recent <strong>Claims</strong></h1>
+        <div class="row">
+            <div class="w-100">
+                {% for claim in claims%}
+                <div class="card">
+                    <div class="card-body">
+                        <strong>{{ claim.user }}</strong> claimed the item <a href="{% url 'found_items_details' item_id=claim.found_item_id %}"> {{ claim.found_item_id }}</a>
+                    </div>
+                </div>
+                {% endfor %}
+
+                <a href="{% url 'claims' %}" style="float: right;" class="btn btn-success">View All Claims</a>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}
+{% block scripts %}
+{% for message in messages %}
+    <script>
+        toastr["{{ message.tags }}"]("{{ message }}");
+    </script>
+{% endfor %}
+{% endblock %}

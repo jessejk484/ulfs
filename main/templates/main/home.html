@@ -1,0 +1,38 @@
+{% extends "base2.html" %}
+{% load static %}
+{% block content %}
+<main class="content">
+    <div class="container-fluid p-0">
+        <h1 class="h3 mb-3">Found Items</h1>
+
+        <div class="row">
+            {% for item in found_items %}
+            <div class="col-12 col-lg-3 col-md-4">
+                <div class="card">
+                    <img class="card-img-top" src="https://ulfs202312.blob.core.windows.net/static/eastus2/{{ item.image }}" alt="Unsplash">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">{{ item.item_name }}</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">{{ item.description }}</p>
+                        <a href="{% url 'found_items_details' item_id=item.id %}" class="btn btn-primary">View Details</a>
+                        <a href="{% url 'claim_item' item_id=item.id %}" class="btn btn-success">Claim</a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <li>No found items available.</li>
+            {% endfor %}
+        </div>
+
+        <a href="{% url 'found_items' %}" style="float: right;" class="btn btn-success">More Items >></a>
+    </div>
+</main>
+{% endblock %}
+{% block scripts %}
+{% for message in messages %}
+    <script>
+        toastr["{{ message.tags }}"]("{{ message }}");
+    </script>
+{% endfor %}
+{% endblock %}
